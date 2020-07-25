@@ -1,53 +1,84 @@
 *{
     box-sizing: border-box;
-    border:1px solid;
+    color: white;
+    /* border: 1px solid;*/
 }
+
 body,html{
+    color:red;
     margin: 0px;
     padding: 0px;
+    font-family: 'Roboto' ,sans-serif;
 }
-body{
-    height: 100vh;
-    color: white;
-    background-color: #353b48;
-    font-family: sans-serif;
-    border:none;
-}
-.top{
-height:13%;
-display:flex;
-align-items: center;
-}
-.btn,.new,.save{
-    border:none;
-}
-.new{
 
+.container{
+    height: 100vh;
+    background-color: #1e2024;
+    /* To provide white space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 1rem;
+    padding-top: 1rem;
 }
-.save{
-    color:white;
-    background-color: #353b48;
+.top-row{
+    height: 55px;
+    display: flex;   
+    justify-content: space-between;
+}
+
+.btn-container{
+    border: 1px solid red;
+    width: 12rem;
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+/* btn default styling */
+.btn{
+ background: #444857;
+    height: 80%;
+    width: 35%;
+    border-radius: 4px;
+    border: none;
+}
+
+.btn.new{
+    color: black;
+    background-image: 
+    linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
 }
 .tabs-container{
-    width: 42rem;
+    width: calc(100vw - 15rem);
+    background: gray;
     height: 100%;
+    text-align: center;
+}
+.main-container{
+    height: calc(100vh - 87px );
+    background: jrebeccapurple;
+    display: flex;
+    justify-content: space-between;
 }
 .file-explorer{
-
-}
-.main{
-    height: calc(100vh - 13%);
-    border: 1px solid;
-    display: flex;
+    height: 100%;
+    background: black;
+    width: 29%;
+    border: 1px solid white;
 }
 .content{
+    width: 70%;
     height: 100%;
-    border: 1px solid;
-    width:41rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .textbox{
-height: 80%;
+    height: 69%;
+    border: 1px solid;
 }
 .terminal{
-height: 20%;
-} 
+    height: 28%;
+    border: 1px solid blue;
+}

@@ -1,6 +1,8 @@
 const $ = require("jquery");
 require("jstree");
-const nodePath = require("path");
+const path = require("path");
+const fs = require("fs");
+
 
 $(document).ready(function(){
 
