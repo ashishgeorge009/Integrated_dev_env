@@ -8,24 +8,42 @@ $(document).ready(function(){
 
 
     //tree view
-    let currPath = process.cwd();
-    console.log(currPath);
-    console.log(getName(currPath));
-
-    let data = [];
-    data.push({
-        id : currPath,
+    let pPath = process.cwd();
+    console.log(pPath);
+    console.log(getName(pPath));
+    name = path.basename(pPath);
+    let data = [{
+        id : pPath,
         parent : "#",
-        text : getName(currPath)
-    })
+        text : name
+    }]
+    
+    let childArr = createData(pPath);
+    data = [...data, ...childArr] //  data.concat(childArr)  // ...data => all the elements in data array
 
-    $("#file-explorer").jstree({
+    $("#tree").jstree({
         "core": {
             "data" : data
         }
     })
+
+
 })
 
-function getName(path){
-    return nodePath.basename(path);
+function getName(pathname){
+    return path.basename(pathname);
+}
+function createData(parent) {
+    let childrens = fs.readdirSync(parent);
+    let cdata = [];
+    for (let i = 0; i < childrens.length; i++) {
+        let id = path.join(parent, childrens[i]);
+        let obj = {
+            id: id,
+            parent: parent,
+            text: childrens[i]
+        };
+        cdata.push(obj);
+    }
+    return cdata;
 }
