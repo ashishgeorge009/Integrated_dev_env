@@ -10,7 +10,7 @@ $(document).ready(function(){
     //tree view
     let pPath = process.cwd();
     console.log(pPath);
-    console.log(getName(pPath));
+    // console.log(getName(pPath));
     name = path.basename(pPath);
     let data = [{
         id : pPath,
@@ -24,11 +24,14 @@ $(document).ready(function(){
     $("#tree").jstree({
         "core": {
             "check_callback" : true,
+            "themes":{
+                "icons":false
+            },
             "data" : data
         }
     }).on("open_node.jstree",
-    function (e, data) {
-        console.log(data);
+    function (e, onClickdata) {
+        // console.log(onClickdata);
         // let cNodePath = data.node.id;
         // let cArr = createData(cNodePath);
         // for (let i = 0; i < cArr.length; i++) {
@@ -36,17 +39,28 @@ $(document).ready(function(){
         //     $('#tree').jstree().create_node(cNodePath, cArr[i], "last");
 
         // }
-        let children = data.node.children;
+        let children = onClickdata.node.children;
         for (let i = 0; i < children.length; i++) {
             let gcArr = addCh(children[i]);
             for (let j = 0; j < gcArr.length; j++) {
-                let doesExist = $('#tree').jstree(true).get_node(gcArr[j].id);
+                let doesExist = $('#tree').jstree(true).get_node(gcArr[j].id); // if that childrens are already created
                 if(doesExist){
                     return;
                 }
                 // create logic
                 $("#tree").jstree().create_node(children[i], gcArr[j], "last");
+                // data.push(gcArr);
+                // console.log(data)
             }
+        }
+    }).on("select_node.jstree",
+    function(e,dataObj){
+        let fPath = dataObj.node.id;
+        let isFile = fs.lstatSync(fPath).isFile();
+        if (isFile) {
+            let content = fs.readFileSync(fPath,"utf-8");
+            console.log(content);
+            
         }
     })
 
