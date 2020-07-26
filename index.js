@@ -18,7 +18,7 @@ $(document).ready(function(){
         text : name
     }]
     
-    let childArr = createData(pPath);
+    let childArr = addCh(pPath);
     data = [...data, ...childArr] //  data.concat(childArr)  // ...data => all the elements in data array
 
     $("#tree").jstree({
@@ -26,15 +26,27 @@ $(document).ready(function(){
             "check_callback" : true,
             "data" : data
         }
-    }).on("select_node.jstree",
+    }).on("open_node.jstree",
     function (e, data) {
+        console.log(data);
+        // let cNodePath = data.node.id;
+        // let cArr = createData(cNodePath);
+        // for (let i = 0; i < cArr.length; i++) {
+        //     console.log(cArr[i]);
+        //     $('#tree').jstree().create_node(cNodePath, cArr[i], "last");
 
-        let cNodePath = data.node.id;
-        let cArr = createData(cNodePath);
-        for (let i = 0; i < cArr.length; i++) {
-            console.log(cArr[i]);
-            $('#tree').jstree().create_node(cNodePath, cArr[i], "last");
-
+        // }
+        let children = data.node.children;
+        for (let i = 0; i < children.length; i++) {
+            let gcArr = addCh(children[i]);
+            for (let j = 0; j < gcArr.length; j++) {
+                let doesExist = $('#tree').jstree(true).get_node(gcArr[j].id);
+                if(doesExist){
+                    return;
+                }
+                // create logic
+                $("#tree").jstree().create_node(children[i], gcArr[j], "last");
+            }
         }
     })
 
@@ -44,14 +56,19 @@ $(document).ready(function(){
 function getName(pathname){
     return path.basename(pathname);
 }
-function createData(parent) {
-    let childrens = fs.readdirSync(parent);
+function addCh(parentPath) {
+    let isDir = fs.lstatSync(parentPath).isDirectory();
+    if (isDir == false) {
+        return [];
+    }
+
+    let childrens = fs.readdirSync(parentPath);
     let cdata = [];
     for (let i = 0; i < childrens.length; i++) {
-        let id = path.join(parent, childrens[i]);
+        let cPath = path.join(parentPath, childrens[i]);
         let obj = {
-            id: id,
-            parent: parent,
+            id: cPath,
+            parent: parentPath,
             text: childrens[i]
         };
         cdata.push(obj);
