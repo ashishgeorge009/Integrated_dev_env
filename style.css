@@ -66,6 +66,7 @@ body,html{
     background: black;
     width: 29%;
     border: 1px solid white;
+    overflow-y: auto;
 }
 .content{
     width: 70%;

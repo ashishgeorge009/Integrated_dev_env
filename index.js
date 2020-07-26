@@ -23,7 +23,18 @@ $(document).ready(function(){
 
     $("#tree").jstree({
         "core": {
+            "check_callback" : true,
             "data" : data
+        }
+    }).on("select_node.jstree",
+    function (e, data) {
+
+        let cNodePath = data.node.id;
+        let cArr = createData(cNodePath);
+        for (let i = 0; i < cArr.length; i++) {
+            console.log(cArr[i]);
+            $('#tree').jstree().create_node(cNodePath, cArr[i], "last");
+
         }
     })
 
