@@ -108,6 +108,9 @@ body,html{
 .tab-name{
 
 }
+.terminal{
+    overflow: auto;
+}
 .fa-times{
     margin-left: 0.8rem;
 
