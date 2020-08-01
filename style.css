@@ -51,9 +51,17 @@ body,html{
 }
 .tabs-container{
     width: 85%;
-    background: gray;
+    /* background: gray; */
     height: 100%;
     text-align: center;
+    background: #2f2f2f;
+    height: 100%;
+    display: flex;
+    /* text-align: center; */
+    align-items: center;
+    padding-left: 10px;
+    overflow: auto;
+    border-radius: 1rem;
 }
 .main-container{
     height: calc(100vh - 87px );
@@ -79,11 +87,30 @@ body,html{
 }
 .textbox{
     height: 69%;
+    width: 100%;
     border: 1px solid;
+    overflow: hidden;
 }
 .terminal{
     height: 28%;
     border: 1px solid blue;
+}
+.tab{
+    display: flex;
+    background-color: slategrey;
+    height: 73%;
+    align-items: center;
+    padding: 1rem;
+    margin-right: 8px;
+    border-radius: 1rem;
+
+}
+.tab-name{
+
+}
+.fa-times{
+    margin-left: 0.8rem;
+
 }
 
 ::-webkit-scrollbar {

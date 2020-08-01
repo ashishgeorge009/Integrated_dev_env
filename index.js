@@ -2,33 +2,14 @@ const $ = require("jquery");
 require("jstree");
 const path = require("path");
 const fs = require("fs");
+let myMonaco;
+let tabArr = {};
+let editor;
 
+$(document).ready( async function(){
 
-$(document).ready(function(){
-
-
-    const amdLoader = require('./node_modules/monaco-editor/min/vs/loader.js');
-    const amdRequire = amdLoader.require;
-    const amdDefine = amdLoader.require.define;
-    amdRequire.config({
-        baseUrl: './node_modules/monaco-editor/min'
-    });
-    console.log(amdLoader);
-    // workaround monaco-css not understanding the environment
-    self.module = undefined;
-
-    amdRequire(['vs/editor/editor.main'], function () {
-        var editor = monaco.editor.create(document.getElementById('text-editor'), {
-            value: [
-                'function x() {',
-                '\tconsole.log("Hello world!");',
-                '}'
-            ].join('\n'),
-            language: 'javascript',
-            theme: "vs-dark"
-        });
-        // editor.setTheme('vs-dark');
-    });
+    editor = await createEditor();
+    
     //tree view
     let pPath = process.cwd();
     console.log(pPath);
@@ -80,9 +61,9 @@ $(document).ready(function(){
         let fPath = dataObj.node.id;
         let isFile = fs.lstatSync(fPath).isFile();
         if (isFile) {
-            let content = fs.readFileSync(fPath,"utf-8");
-            console.log(content);
+            setData(fPath);
             
+            createTab(fPath);
         }
     })
 
@@ -111,7 +92,66 @@ function addCh(parentPath) {
     }
     return cdata;
 }
+function setData(fPath){
+    let content = fs.readFileSync(fPath,"utf-8");
+            // console.log(content);
+            editor.getModel().setValue(content);
+            var model = editor.getModel();
+            let ext = fPath.split(".").pop();
+            if(ext == "js"){
+                ext = "javascript"
+            }
 
+            myMonaco.editor.setModelLanguage(model,ext);
+}
 function createEditor(){
-    
+    const amdLoader = require('./node_modules/monaco-editor/min/vs/loader.js');
+    const amdRequire = amdLoader.require;
+    const amdDefine = amdLoader.require.define;
+    amdRequire.config({
+        baseUrl: './node_modules/monaco-editor/min'
+    });
+    console.log(amdLoader);
+    // workaround monaco-css not understanding the environment
+    self.module = undefined;
+
+    return new Promise(function(resolve,reject){
+    amdRequire(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('text-editor'), {
+            value: [
+                'function x() {',
+                '\tconsole.log("Hello world!");',
+                '}'
+            ].join('\n'),
+            language: 'javascript',
+            theme: "vs-dark"
+        });
+        myMonaco = monaco;
+        resolve(editor);
+    });
+})
+}
+
+function createTab(fPath) {
+    let fName = path.basename(fPath);
+    if (!tabArr[fPath]) {
+        $("#tabs-row").append(`<div class="tab">
+        <div class="tab-name" id=${fPath} onclick=handleTab(this)>${fName}</div>
+        <i class="fas fa-times" id=${fPath} onclick=handleClose(this)></i>
+        </div>`);
+        tabArr[fPath] = fName;
+    }
+}
+function handleTab(elem) {
+    let fPath = $(elem).attr("id");
+    setData(fPath);
+}
+function handleClose(elem) {
+    let fPath = $(elem).attr("id");
+    delete tabArr[fPath];
+    $(elem).parent().remove();
+ fPath =$(".tab .tab-name").eq(0).attr("id");
+    if(fPath){
+        setData(fPath);
+    }
 }
