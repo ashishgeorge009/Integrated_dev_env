@@ -95,8 +95,33 @@ $(document).ready( async function(){
     })
     ptyProcess.on('data', function (data) {
         xterm.write(data);
-        fitAddon.fit();
+        
     });
+    fitAddon.fit();
+    // myMonaco.editor.defineTheme('myCustomTheme', {
+    //     base: 'vs', // can also be vs-dark or hc-black
+    //     inherit: true, // can also be false to completely replace the builtin rules
+    //     rules: [
+    //         { token: 'comment', foreground: 'ffa500', fontStyle: 'italic underline' },
+    //         { token: 'comment.js', foreground: '008800', fontStyle: 'bold' },
+    //         { token: 'comment.css', foreground: '0000ff' } // will inherit fontStyle from `comment` above
+    //     ],
+    //     colors: {
+    //         'editor.foreground': '#000000',
+    //         'editor.background': '#EDF9FA',
+    //         'editorCursor.foreground': '#8B0000',
+    //         'editor.lineHighlightBackground': '#0000FF20',
+    //         'editorLineNumber.foreground': '#008800',
+    //         'editor.selectionBackground': '#88000030',
+    //         'editor.inactiveSelectionBackground': '#88000015'
+    //     }
+    // });
+    
+    $(".theme").change(function(){
+        console.log(this.value);
+        myMonaco.editor.setTheme(this.value);
+
+    })
 
 })
 
@@ -135,8 +160,12 @@ function setData(fPath){
                 ext = "python"
             }
 
-            myMonaco.editor.setModelLanguage(model,ext);
+            monaco.editor.setModelLanguage(model,ext);
+
 }
+
+
+
 function createEditor(){
     const amdLoader = require('./node_modules/monaco-editor/min/vs/loader.js');
     const amdRequire = amdLoader.require;
