@@ -91,9 +91,13 @@ body,html{
     border: 1px solid;
     overflow: hidden;
 }
-.terminal{
+.terminal-container{
     height: 28%;
     border: 1px solid blue;
+}
+.terminal{
+    height: 100%;
+    width: 100%;
 }
 .tab{
     display: flex;
@@ -108,9 +112,7 @@ body,html{
 .tab-name{
 
 }
-.terminal{
-    overflow: auto;
-}
+
 .fa-times{
     margin-left: 0.8rem;
 
