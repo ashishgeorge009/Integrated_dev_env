@@ -9,6 +9,8 @@ const pty = require('node-pty');
 const os=require("os");
 const Terminal = require('xterm').Terminal;
 let { FitAddon } = require('xterm-addon-fit');
+const dialog = require("electron").remote.dialog;
+let filename;
 
 $(document).ready( async function(){
 
@@ -69,6 +71,7 @@ $(document).ready( async function(){
             
             createTab(fPath);
         }
+        
     })
 
 
@@ -116,11 +119,61 @@ $(document).ready( async function(){
     //         'editor.inactiveSelectionBackground': '#88000015'
     //     }
     // });
-    
-    $(".theme").change(function(){
-        console.log(this.value);
-        myMonaco.editor.setTheme(this.value);
 
+    $(".check").on("change",function(){
+        if(this.checked){
+            myMonaco.editor.setTheme("vs-dark");
+        }
+        else{
+            myMonaco.editor.setTheme("vs");
+
+        }
+        // myMonaco.editor.setTheme(this.value);
+
+    })
+    $("#New").click( async function(){
+        try{
+        let sdb = await dialog.showSaveDialog();
+        let fp = sdb.filePath;
+        fs.writeFileSync(fp,"");
+        console.log(fp)
+        saveNewFile(fp);
+        }catch(err){
+            console.log(err)
+        }
+        // setData(fp);
+        // createTab(fp);
+        // // console.log(fp)
+        // console.log(path.parse(fp).dir)
+        // let obj = {
+        //     id: fp,
+        //     parent: path.parse(fp).dir,
+        //     text: path.parse(fp).base
+        // };
+        // let doesExist = $('#tree').jstree(true).get_node(fp); // if that childrens are already created
+        //         if(doesExist){
+        //             return;
+        //         }
+        //         // create logic
+        //         $("#tree").jstree().create_node(path.parse(fp).dir, obj, "last");
+
+    })
+    $("#Save").click(async function(){
+        code = editor.getModel().getValue();
+        if(filename){
+            fs.writeFileSync(filename,code);
+            alert(`${path.parse(filename).base} is saved`)
+        }else{
+            try{
+            let sdb = await dialog.showSaveDialog();
+            let fp = sdb.filePath;
+            fs.writeFileSync(fp,code);
+            saveNewFile(fp)
+            alert(`${path.parse(fp).base} is saved`)
+            }catch(err){
+                console.log(err);
+            }
+        }
     })
 
 })
@@ -195,6 +248,7 @@ function createEditor(){
 }
 
 function createTab(fPath) {
+    filename = fPath;
     let fName = path.basename(fPath);
     if (!tabArr[fPath]) {
         $("#tabs-row").append(`<div class="tab">
@@ -206,6 +260,7 @@ function createTab(fPath) {
 }
 function handleTab(elem) {
     let fPath = $(elem).attr("id");
+    filename = fPath;
     setData(fPath);
 }
 function handleClose(elem) {
@@ -213,7 +268,27 @@ function handleClose(elem) {
     delete tabArr[fPath];
     $(elem).parent().remove();
  fPath =$(".tab .tab-name").eq(0).attr("id");
+    filename = fPath;
     if(fPath){
         setData(fPath);
+    }else{
+        editor.getModel().setValue("");
     }
+}
+function saveNewFile(fp){
+        setData(fp);
+        createTab(fp);
+        // console.log(fp)
+        console.log(path.parse(fp).dir)
+        let obj = {
+            id: fp,
+            parent: path.parse(fp).dir,
+            text: path.parse(fp).base
+        };
+        let doesExist = $('#tree').jstree(true).get_node(fp); // if that childrens are already created
+                if(doesExist){
+                    return;
+                }
+                // create logic
+                $("#tree").jstree().create_node(path.parse(fp).dir, obj, "last");
 }
