@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/ashishgeorge009/Integrated_dev_env#readme",
   "devDependencies": {
-    "electron": "^9.1.0"
+    "electron": "^13.6.6"
   },
   "dependencies": {
     "jquery": "^3.5.1",
